@@ -1,10 +1,11 @@
 # 🎵 Mood-Based Music Recommendation System
 
-Real-time facial-emotion and hand-gesture detection that recommends music based on how you're actually feeling — built with MediaPipe, OpenCV, and a Keras neural network.
+Real-time facial-emotion and hand-gesture detection that recommends personalized music based on how you're feeling — built with **Streamlit**, **MediaPipe Holistic**, **OpenCV**, and **TensorFlow/Keras**.
 
 ![Python](https://img.shields.io/badge/Python-3.9%2B-blue?logo=python&logoColor=white)
-![TensorFlow](https://img.shields.io/badge/TensorFlow-2.15-orange?logo=tensorflow&logoColor=white)
-![OpenCV](https://img.shields.io/badge/OpenCV-4.9-green?logo=opencv&logoColor=white)
+![Streamlit](https://img.shields.io/badge/Streamlit-1.30%2B-FF4B4B?logo=streamlit&logoColor=white)
+![TensorFlow](https://img.shields.io/badge/TensorFlow-2.x-orange?logo=tensorflow&logoColor=white)
+![OpenCV](https://img.shields.io/badge/OpenCV-4.x-green?logo=opencv&logoColor=white)
 ![MediaPipe](https://img.shields.io/badge/MediaPipe-Holistic-red?logo=google&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-yellow.svg)
 
@@ -14,97 +15,141 @@ Real-time facial-emotion and hand-gesture detection that recommends music based 
 
 ## 📌 Overview
 
-This project captures facial landmarks and hand gestures live from your webcam using **MediaPipe Holistic**, then classifies your emotional state (happy, sad, energetic, shocked, surprised, etc.) with a **dense neural network** trained on your own recorded data. The predicted mood can then be mapped to a music/playlist recommendation.
+The **Mood-Based Music Recommendation System** captures facial expressions and hand gestures live from your webcam using **MediaPipe Holistic**, then classifies your emotional state (`happy`, `sad`, `energy`, `shocked`, `surprised`, etc.) using a **deep neural network**. 
+
+Once your emotion is detected, the built-in **Streamlit web application** allows you to choose your preferred language and favorite artist, instantly generating curated music recommendations and launching your playlist on YouTube!
 
 ![Emotion Landmarks](assets/emotion_diagram.png)
 
+---
+
 ## ✨ Features
 
-- **Real-time detection** — face + both hands tracked live via webcam, no external sensors needed
-- **Custom-trained model** — trained on your own gesture/expression data, not a generic pretrained dataset
-- **Lightweight architecture** — simple 2-layer dense network (512 → 256 → softmax), trains in seconds
-- **Fully offline** — everything runs locally, no cloud API calls
+- **Interactive Web App**: Modern, responsive UI powered by Streamlit and Streamlit-WebRTC for browser-based live video processing.
+- **Customizable Music Recommendations**: Filter song recommendations by language (English, Hindi, Spanish, Punjabi, Tamil, etc.) and artist/singer.
+- **Real-Time Facial & Hand Tracking**: Tracks 468 facial landmarks and 42 hand landmarks simultaneously without external sensors.
+- **Position-Invariant Landmark Normalization**: Distances normalized relative to facial and hand reference points for robust detection regardless of distance from the camera.
+- **Custom Training Pipeline**: Easily record new mood/gesture data and retrain the classifier in seconds.
+- **Dual Mode**: Run the interactive web app (`app.py`) or lightweight standalone camera inference (`inference.py`).
 
-## 🗂️ Project Structure
+---
+
+## 📂 Project Structure
 
 ```
-mood-music-recommender/
-├── data_collection.py     # Step 1: record labeled samples from your webcam
-├── train.py                # Step 2: train the classifier on recorded data
-├── inference.py             # Step 3: run live emotion detection
-├── model.h5                 # Pretrained model (ready to use out of the box)
-├── labels.npy                # Class labels for the pretrained model
-├── data/                       # Sample recorded gesture/emotion data (.npy)
-├── assets/                       # Images used in this README
-├── requirements.txt
-└── setup.sh                        # one-click environment setup
+Mood-music-recommender/
+│
+├── app.py                  # 🚀 Main Streamlit web application (Live camera & music recommendations)
+├── inference.py            # 👁️ Standalone OpenCV live emotion detection
+├── train.py                # 🧠 Train the neural network on landmark datasets
+├── data_collection.py      # 📹 Record custom emotion samples from webcam
+├── model.h5                # 📦 Pretrained Keras emotion classifier
+├── labels.npy              # 🏷️ Class labels for the trained model
+│
+├── data/                   # 📁 Recorded landmark datasets (.npy files)
+│   ├── happy.npy
+│   ├── sad.npy
+│   ├── energy.npy
+│   ├── not_ok.npy
+│   ├── shocked.npy
+│   └── surprised.npy
+│
+├── assets/                 # 🖼️ Diagrams and banner images
+│   ├── demo_banner.png
+│   └── emotion_diagram.png
+│
+├── requirements.txt        # 📋 Python dependencies
+├── .gitignore              # 🚫 Git ignore rules (filters large media and caches)
+└── LICENSE                 # 📄 MIT License
 ```
 
-## 🚀 Quick Start (one-click setup)
+---
 
+## ⚡ Quick Start
+
+### 1. Clone the Repository
 ```bash
-git clone https://github.com/<your-username>/mood-music-recommender.git
-cd mood-music-recommender
-chmod +x setup.sh && ./setup.sh
+git clone https://github.com/Krishna-kumar-1/Mood-music-recommender.git
+cd Mood-music-recommender
 ```
 
-This creates a virtual environment and installs every dependency in `requirements.txt`. Then activate it:
-
+### 2. Create a Virtual Environment & Install Dependencies
 ```bash
+# Windows
+python -m venv venv
+venv\Scripts\activate
+
+# macOS / Linux
+python3 -m venv venv
 source venv/bin/activate
+
+# Install required packages
+pip install -r requirements.txt
 ```
 
-### Try it immediately with the pretrained model
+### 3. Launch the Music Recommender Web App
+```bash
+streamlit run app.py
+```
+This will open the web app in your browser at `http://localhost:8501`. 
+1. Click **START** on the webcam feed.
+2. Select your preferred language and optional singer.
+3. Click **🎵 Recommend Me Songs!** to open your mood playlist!
+
+---
+
+## 💻 Standalone Live Detection
+
+To run emotion detection directly in an OpenCV window without the web interface:
 
 ```bash
 python inference.py
 ```
+*Press **ESC** or **q** to close the window.*
 
-Press **Esc** to quit the webcam window.
+---
 
-## 🏗️ Train on your own data (optional)
+## 🏋️‍♂️ Train on Custom Emotions
 
-Want the model to recognize *your* expressions instead of the bundled ones?
+Want to train the model to recognize your own gestures or new emotions?
 
-1. **Collect data** — record ~100 frames per emotion:
-   ```bash
-   python data_collection.py
-   # Enter a label when prompted, e.g. "happy", "sad", "energy"
-   # Repeat for each mood you want to detect
-   ```
-2. **Train** the model on everything inside `data/`:
-   ```bash
-   python train.py
-   ```
-   This produces a fresh `model.h5` and `labels.npy` in the project root.
-3. **Run inference** as above — it will now use your newly trained model.
+### Step 1: Collect Landmark Data
+```bash
+python data_collection.py
+```
+Enter an emotion name (e.g. `happy`, `sad`, `focus`) and pose in front of the camera. The script automatically records 100 frames of normalized landmarks into `data/<emotion>.npy`.
 
-## 🧠 How It Works
+### Step 2: Train the Model
+```bash
+python train.py
+```
+The script will load all datasets in `data/`, train a multi-class neural network, and update `model.h5` and `labels.npy`.
 
-1. MediaPipe Holistic extracts 468 face landmarks + 21 landmarks per hand from each webcam frame.
-2. Landmarks are normalized relative to a reference point (nose tip for face, index fingertip for hands) so the model is position-invariant.
-3. The flattened landmark vector is fed into a dense neural network that outputs a softmax probability over emotion classes.
-4. The predicted class label can be mapped to a corresponding music genre/playlist.
+---
+
+## 🔬 How It Works
+
+1. **Landmark Extraction**: MediaPipe Holistic extracts 468 3D facial coordinates and 21 3D landmarks per hand.
+2. **Feature Normalization**:
+   - Facial coordinates are normalized relative to the nose tip (landmark index `1`).
+   - Hand coordinates are normalized relative to the index fingertip (landmark index `8`).
+   - Missing hands are zero-padded to maintain a consistent 1,020-element feature vector.
+3. **Classification**: A deep neural network (Dense 512 → Dropout → Dense 256 → Dropout → Softmax) predicts probabilities across all emotion classes.
+4. **Music Mapping**: The predicted mood is dynamically mapped to a YouTube search query incorporating user-selected language and artist preferences.
+
+---
 
 ## 🛠️ Tech Stack
 
-| Component | Library |
+| Component | Technology |
 |---|---|
-| Landmark detection | MediaPipe Holistic |
-| Video capture | OpenCV |
-| Model training/inference | TensorFlow / Keras |
-| Data handling | NumPy |
+| Web UI & Streaming | Streamlit, Streamlit-WebRTC, PyAV |
+| Vision & Tracking | MediaPipe Holistic, OpenCV |
+| Deep Learning | TensorFlow, Keras |
+| Data Processing | NumPy |
 
-## 📋 Requirements
-
-- Python 3.9+
-- A webcam
-- See `requirements.txt` for exact package versions
-
-## 🤝 Contributing
-
-Issues and pull requests are welcome — feel free to fork and extend this with actual music-streaming API integration (Spotify/YouTube Music).
+---
 
 ## 📄 License
 
-Licensed under the [MIT License](LICENSE).
+This project is licensed under the [MIT License](LICENSE).

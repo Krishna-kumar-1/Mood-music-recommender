@@ -13,5 +13,6 @@ pip install --upgrade pip
 pip install -r requirements.txt
 
 echo ""
-echo "Setup complete."
-echo "Run 'source venv/bin/activate' then 'python inference.py' to test the pretrained model."
+echo "Setup complete!"
+echo "To run the Web App: streamlit run app.py"
+echo "To run Standalone Inference: python inference.py"
