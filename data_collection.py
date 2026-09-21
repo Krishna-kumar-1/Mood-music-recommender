@@ -7,12 +7,12 @@ os.makedirs("data", exist_ok=True)
 
 cap = cv2.VideoCapture(0)
 if not cap.isOpened():
-    print("❌ Error: Could not access webcam. Please check your camera connection.")
+    print("[ERROR] Could not access webcam. Please check your camera connection.")
     exit(1)
 
 name = input("Enter the name of the emotion/mood data (e.g., happy, sad, energy, surprised): ").strip()
 if not name:
-    print("❌ Error: Mood name cannot be empty.")
+    print("[ERROR] Mood name cannot be empty.")
     exit(1)
 
 # Sanitize file name
@@ -98,6 +98,6 @@ cv2.destroyAllWindows()
 if data_size > 0:
     out_path = os.path.join("data", f"{name}.npy")
     np.save(out_path, np.array(X))
-    print(f"\n✅ Saved {data_size} frames to '{out_path}' (shape: {np.array(X).shape})")
+    print(f"\n[OK] Saved {data_size} frames to '{out_path}' (shape: {np.array(X).shape})")
 else:
-    print("\n⚠️ No frames captured. Please ensure your face is clearly visible to the camera.")
+    print("\n[WARNING] No frames captured. Please ensure your face is clearly visible to the camera.")

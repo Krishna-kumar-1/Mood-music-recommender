@@ -8,13 +8,13 @@ MODEL_PATH = "model.h5"
 LABELS_PATH = "labels.npy"
 
 if not os.path.exists(MODEL_PATH) or not os.path.exists(LABELS_PATH):
-    print("❌ Error: Trained model files not found.")
+    print("[ERROR] Trained model files not found.")
     print("Please run 'python train.py' to generate model.h5 and labels.npy.")
     exit(1)
 
 model = load_model(MODEL_PATH)
 labels = np.load(LABELS_PATH)
-print(f"✅ Loaded model with classes: {list(labels)}")
+print(f"[OK] Loaded model with classes: {list(labels)}")
 
 mp_holistic = mp.solutions.holistic
 mp_hands = mp.solutions.hands
@@ -26,7 +26,7 @@ drawing = mp.solutions.drawing_utils
 
 cap = cv2.VideoCapture(0)
 if not cap.isOpened():
-    print("❌ Error: Could not access webcam.")
+    print("[ERROR] Could not access webcam.")
     exit(1)
 
 print("Starting live emotion detection... Press ESC or 'q' to quit.")

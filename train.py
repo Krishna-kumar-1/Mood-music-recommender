@@ -81,4 +81,4 @@ model.fit(
 # Save trained artifacts
 model.save("model.h5")
 np.save("labels.npy", np.array(label_names))
-print("\n✅ Successfully trained and saved model.h5 and labels.npy!")
+print("\n[SUCCESS] Successfully trained and saved model.h5 and labels.npy!")
