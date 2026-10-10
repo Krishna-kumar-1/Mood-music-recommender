@@ -1,18 +1,18 @@
 #!/bin/bash
-# One-click setup: creates a virtual env and installs everything needed.
+# Smart One-Click Setup & Launcher for Linux/macOS
 set -e
+cd "$(dirname "$0")"
 
-echo "Creating virtual environment..."
-python3 -m venv venv
+VENV_DIR=".venv"
 
-echo "Activating virtual environment..."
-source venv/bin/activate
+if [ ! -d "$VENV_DIR" ]; then
+    echo "[SETUP] Creating virtual environment..."
+    if command -v uv >/dev/null 2>&1; then
+        uv venv "$VENV_DIR" --python 3.11
+    else
+        python3 -m venv "$VENV_DIR"
+    fi
+fi
 
-echo "Installing dependencies..."
-pip install --upgrade pip
-pip install -r requirements.txt
-
-echo ""
-echo "Setup complete!"
-echo "To run the Web App: streamlit run app.py"
-echo "To run Standalone Inference: python inference.py"
+source "$VENV_DIR/bin/activate"
+python run.py "$@"
